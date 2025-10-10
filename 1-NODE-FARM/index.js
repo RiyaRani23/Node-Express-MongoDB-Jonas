@@ -2,8 +2,9 @@
 // utf-8 encoding is important to get a string(english) instead of a buffer 
 
 const fs = require('fs');
-const https = require('https');
+const http = require('http');
 const url = require('url');
+const replaceTemplate = require('./modules/replaceTemplate');
 
 // ********************** FILES **********************
 
@@ -35,19 +36,44 @@ const url = require('url');
 
 
 // ********************** SERVER **********************
+
+
+
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+
+
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data); 
 
-const server = https.createServer((req, res) => {
-    const pathName = req.url;
+const server = http.createServer((req, res) => {
 
-    if (pathName === '/' || pathName === '/overview') {
-        res.end('This is the OVERVIEW');
+    const {query, pathname} = url.parse(req.url, true);
+
+// Overview page
+    if (pathname === '/' || pathname === '/overview') {
+         
+       res.writeHead(200, { 'Content-type': 'text/html' });
+  
+       const cardsHtml = dataObj.map(el => replaceTemplate(tempCard, el)).join('');
+      const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+      res.end(output);
+                
+        // res.end(tempOverview);
     }
-    else if (pathName === '/product') {
-        res.end('This is the PRODUCT');
+
+    // Product page
+    else if (pathname === '/product') {
+        res.writeHead(200, { 'Content-type': 'text/html' });
+        const product = dataObj[query.id];
+        const output = replaceTemplate(tempProduct, product);
+        res.end(output);
+       
     } 
-    else if(pathName === '/api') {
+
+    // API
+    else if(pathname === '/api') {
         fs.readFile(`${__dirname}/dev-data/data.json`, 'utf-8', (err, data) => {
             const productData = JSON.parse(data); 
             // console.log(productData);
@@ -56,6 +82,8 @@ const server = https.createServer((req, res) => {
         });
         
     }
+
+    // Not found
     else {
         // res.end('Page not found');
         res.writeHead(404, {

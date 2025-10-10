@@ -1,0 +1,19 @@
+{
+  "name": "express-mongodb-jonas",
+  "version": "1.0.0",
+  "description": "This repository contains all project work, exercises, and notes from the Udemy course **\"Node.js, Express, MongoDB Bootcamp\"** by [Jonas Schmedtmann](https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RiyaRani23/Node-Express-MongoDB-Jonas.git"
+  },
+  "author": "Riya Rani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RiyaRani23/Node-Express-MongoDB-Jonas/issues"
+  },
+  "homepage": "https://github.com/RiyaRani23/Node-Express-MongoDB-Jonas#readme"
+}
